@@ -2,10 +2,24 @@ const algorithmia = require("algorithmia")
 const algorithmiaApiKey = require("../credentials/algorithmia.json").apiKey
 const sentenceBoundaryDetection = require("sbd")
 
+const watsonApiKey = require("../credentials/watson-nlu.json").apikey
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
+const nlu = new NaturalLanguageUnderstandingV1({
+    version: '2019-07-12',
+    authenticator: new IamAuthenticator({
+        apikey: watsonApiKey,
+    }),
+    url: 'https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/edb7b669-7409-47e7-9040-e38689e3c0e6'
+});
+
 async function robot(content) {
     await fetchContentFromWikipedia(content)
     sanitizeContent(content)
     breakContentIntoSentences(content)
+    limitMaximunSentences(content)
+    await fetchKeyworsOfAllSentences(content)
 
     async function fetchContentFromWikipedia(content) {
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
@@ -41,20 +55,49 @@ async function robot(content) {
     }
 
     function breakContentIntoSentences(content) {
-        content.senteces = []
+        content.sentences = []
 
-        const senteces = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
+        const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
         
-        senteces.forEach(sentence => {
-            content.senteces.push({
+        sentences.forEach(sentence => {
+            content.sentences.push({
                 text: sentence,
                 keywords: [],
                 images: []
             })            
-        });
+        })
+    }
 
+    function limitMaximunSentences(content) {
+        content.sentences = content.sentences.slice(0, content.maximunSentences)
+    }
 
-        console.log(content.senteces )
+    async function fetchKeyworsOfAllSentences(content) {
+        for(const sentence of content.sentences) {
+            sentence.keyword= await fetchWatsonAndReturnKeywords(sentence.text)
+        }
+    }
+
+    async function fetchWatsonAndReturnKeywords(sentence) {
+        return new Promise((resolve, reject) => {
+            nlu.analyze({
+                text: sentence,
+                features: {
+                    keywords: {}
+                }
+            }, (error, response) => {
+                if (error) {
+                    reject(error)
+                    return
+                }
+
+                const keywords = response.result.keywords.map((keyword) => {
+                    return keyword.text
+                })
+
+                resolve(keywords)
+            })
+        })
     }
 }
 
