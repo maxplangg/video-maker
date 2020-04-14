@@ -1,18 +1,15 @@
-const readline = require('readline-sync')
 const robots = {
     input: require('./robots/input.js'),
-    text: require('./robots/text.js')
+    text: require('./robots/text.js'),
+    state: require('./robots/state.js')
 }
 
 async function start() {
-    const content = {
-        maximunSentences: 7
-    }
+    robots.input()
+    await robots.text()
 
-    robots.input(content)
-    await robots.text(content)
-
-    console.log(content)
+    const content = robots.state.load()
+    console.dir(content, { depth: null })
 }
 
 start()
