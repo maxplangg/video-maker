@@ -80,7 +80,7 @@ async function robot() {
 
     async function fetchKeyworsOfAllSentences(content) {
         for(const sentence of content.sentences) {
-            sentence.keyword= await fetchWatsonAndReturnKeywords(sentence.text)
+            sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text)
         }
     }
 
