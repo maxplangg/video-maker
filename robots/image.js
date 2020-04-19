@@ -9,13 +9,13 @@ const googleCustomSearchCredentials = require('../credentials/google-search.json
 async function robot() {
     const content = state.load()
 
-    //await fechImagesOfAllSentences(content)
-    //await downloadAllImages(content)
-    //await convertAllImagens(content)
-    //await createAllSentenceImages(content)
+    await fechImagesOfAllSentences(content)
+    await downloadAllImages(content)
+    await convertAllImagens(content)
+    await createAllSentenceImages(content)
     await createYouTubeThumbnail()
 
-    //state.save(content)
+    state.save(content)
 
     async function fechImagesOfAllSentences(content) {
         for (let sentenceIndex = 0; sentenceIndex < content.sentences.length; sentenceIndex++) {
