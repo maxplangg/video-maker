@@ -17,17 +17,17 @@
   },
   "homepage": "https://github.com/maxplangg/video-maker#readme",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.17",
+    "@ffprobe-installer/ffprobe": "^1.0.10",
     "algorithmia": "^0.3.10",
+    "express": "^4.17.1",
+    "fluent-ffmpeg": "^2.1.2",
     "gm": "^1.23.1",
     "googleapis": "^48.0.0",
     "ibm-watson": "^5.4.0",
     "image-downloader": "^3.5.0",
     "readline-sync": "^1.4.10",
     "sbd": "^1.0.17",
-    "@ffmpeg-installer/ffmpeg": "^1.0.17",
-    "@ffprobe-installer/ffprobe": "^1.0.10",
-    "videoshow": "^0.1.11",
-    "fluent-ffmpeg": "^2.1.2",
-    "express": "^4.16.4"
+    "videoshow": "^0.1.11"
   }
 }

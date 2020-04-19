@@ -111,6 +111,7 @@ content.json
 content/*.png
 content/*.jpg
 content/*.js
+content/*.mp3
 content/*.mp4
 content/*.mov
 
