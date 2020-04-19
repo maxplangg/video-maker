@@ -164,7 +164,7 @@ async function robot() {
             aerender.stdout.on("data", data => { process.stdout.write(data) })
 
             aerender.on("close", () => {
-                console.log("> After Effects closed")
+                console.log("> [video-robot] After Effects closed")
                 resolve()
             })
         })
@@ -172,7 +172,7 @@ async function robot() {
 
     async function renderVideoWithNode(content) {
         return new Promise((resolve, reject) => {
-            console.log("> Renderizando vídeo com node.")
+            console.log(">[video-robot] Configuring to render video with ffmpeg/NodeJS")
     
             let images = []
     
@@ -219,15 +219,15 @@ async function robot() {
                 .audio("content/audio.mp3")
                 .save("content/video.mp4")
                 .on("start", function(command) {
-                    console.log("> Processo ffmpeg iniciado:", command);
+                    console.log("> [video-robot] [ffmpeg]starting: ", command);
                 })
                 .on("error", function(err, stdout, stderr) {
-                    console.error("Error:", err);
-                    console.error("> ffmpeg stderr:", stderr);
+                    console.error("> [video-robot] [ffmpeg] error:", err);
+                    console.error("> [video-robot] [ffmpeg] stderr:", stderr);
                     reject(err);
                 })
                 .on("end", function(output) {
-                    console.error("> Video criado:", output);
+                    console.log("> [video-robot] [ffmpeg] Video created", output);
                     resolve();
                 })
         })
