@@ -1,6 +1,7 @@
 const imageDownloader = require('image-downloader')
 const google = require('googleapis').google
 const customSearch = google.customsearch('v1')
+const path = require('path')
 const state = require('./state.js')
 
 const googleCustomSearchCredentials = require('../credentials/google-search.json')
@@ -36,7 +37,7 @@ async function robot() {
             auth: googleCustomSearchCredentials.apiKey,
             cx: googleCustomSearchCredentials.searchEngineId,
             q: query,
-            num: 2,
+            num: 4,
             searchType: 'image'
         })
 
@@ -56,10 +57,13 @@ async function robot() {
             for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
                 const imageUrl = images[imageIndex]
 
-                try {
+                try {                    
                     if (content.downloadedImages.includes(imageUrl))
                         throw new Error("Image already downloaded")
-                    
+
+                    if (path.extname(imageUrl) == "")
+                        throw new Error("Image not suported downloaded")
+
                     await downloadAndSave(imageUrl, `${sentenceIndex}-original.png`)
 
                     console.log(`> [image-robot] [${sentenceIndex}][${imageIndex}] Image successfully downloaded ${imageUrl}`)
